@@ -1,0 +1,54 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Player : MonoBehaviour {
+
+    public bool respawn;
+    public Helicopter helicopter;
+
+    private Vector3 respawnLocation;
+    public Transform Spawner;
+    private Transform[] Spawnpoints;
+
+    private AudioSource[] audioArray;
+    private AudioSource InnerThoughts;
+
+    private void Start()
+    {
+        Spawnpoints = Spawner.GetComponentsInChildren<Transform>();
+
+        audioArray = GetComponents<AudioSource>();
+        foreach (AudioSource audio in audioArray)
+        {
+            if (audio.priority == 1)
+                InnerThoughts = audio;
+        }
+
+        InnerThoughts.Play();
+    }
+
+    private void Update()
+    {
+        if (respawn == true)
+        {
+            Respawn();
+        }
+    }
+
+    public void Respawn()
+    {
+        respawn = false;
+        respawnLocation = Spawnpoints[Random.Range(1, Spawnpoints.Length - 1)].transform.position;
+        print(respawnLocation + ": Respawn Location");
+        transform.position = respawnLocation;
+    }
+    
+    public void ClearAreaFound()
+    {
+        Debug.Log("Clear area found!");
+        helicopter.CallChoppa();
+        
+    }
+
+}
